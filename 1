@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+
+import cv2
+import numpy as np
+
+cap = cv2.VideoCapture("/Users/KerimErekmen/developer/python/MachineLearing/openCVLearning/driveRoad.mp4")
+kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
+
+"""
+Bild mit den punkten des FAST Algorithmus versehen.
+
+@param img
+@return img2
+"""
+def punkteZeichnen(img):
+  print("staring....")
+  orb = cv2.ORB_create() #objekt
+  gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+  
+  #finden der punkte und zeichnen der Punkte
+  if img is None:
+    print("Kein Input!")
+  else:
+    punkte = orb.detect(gray, None)
+    img2 = cv2.drawKeypoints(gray, punkte, img, color = (0, 0xff, 0xff), flags=0)
+    print(type(img2))
+  return img2
+
+while(True):      
+    frame = cap.read()
+    video = punkteZeichnen(frame[1])
+    cv2.imshow("FrameDetection", video)
+    k = cv2.waitKey(1) & 0xff
+    #print("Der frame Typ ist -->", type(frame), k)
+    if k == 27:
+        break
+  
+cap.release()
+cv2.destroyAllWindows()
+
